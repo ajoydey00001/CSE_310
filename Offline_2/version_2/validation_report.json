@@ -1,0 +1,95 @@
+[
+  {
+    "input": "input.txt",
+    "reference": "my_log.txt",
+    "exit_code": 0,
+    "exact_byte_match": false,
+    "actual_bytes": 7772,
+    "expected_bytes": 8362,
+    "actual_lines": 590,
+    "expected_lines": 590,
+    "different_lines": 590,
+    "actual_CRLF": 0,
+    "expected_CRLF": 590,
+    "equal_after_CRLF_normalization": true,
+    "first_differences": [
+      {
+        "line": 1,
+        "expected": "b'Line no 1: Token <INT> Lexeme int found\\r\\n'",
+        "actual": "b'Line no 1: Token <INT> Lexeme int found\\n'"
+      },
+      {
+        "line": 2,
+        "expected": "b'\\r\\n'",
+        "actual": "b'\\n'"
+      },
+      {
+        "line": 3,
+        "expected": "b'At line no: 1 type_specifier : INT \\r\\n'",
+        "actual": "b'At line no: 1 type_specifier : INT \\n'"
+      }
+    ]
+  },
+  {
+    "input": "input1.txt",
+    "reference": "my_log(1).txt",
+    "exit_code": 0,
+    "exact_byte_match": false,
+    "actual_bytes": 20436,
+    "expected_bytes": 21872,
+    "actual_lines": 1436,
+    "expected_lines": 1436,
+    "different_lines": 1436,
+    "actual_CRLF": 0,
+    "expected_CRLF": 1436,
+    "equal_after_CRLF_normalization": true,
+    "first_differences": [
+      {
+        "line": 1,
+        "expected": "b'Line no 1: Token <INT> Lexeme int found\\r\\n'",
+        "actual": "b'Line no 1: Token <INT> Lexeme int found\\n'"
+      },
+      {
+        "line": 2,
+        "expected": "b'\\r\\n'",
+        "actual": "b'\\n'"
+      },
+      {
+        "line": 3,
+        "expected": "b'At line no: 1 type_specifier : INT \\r\\n'",
+        "actual": "b'At line no: 1 type_specifier : INT \\n'"
+      }
+    ]
+  },
+  {
+    "input": "input2.txt",
+    "reference": "my_log(2).txt",
+    "exit_code": 0,
+    "exact_byte_match": false,
+    "actual_bytes": 48044,
+    "expected_bytes": 51679,
+    "actual_lines": 3635,
+    "expected_lines": 3635,
+    "different_lines": 3635,
+    "actual_CRLF": 0,
+    "expected_CRLF": 3635,
+    "equal_after_CRLF_normalization": true,
+    "first_differences": [
+      {
+        "line": 1,
+        "expected": "b'Line no 1: Token <INT> Lexeme int found\\r\\n'",
+        "actual": "b'Line no 1: Token <INT> Lexeme int found\\n'"
+      },
+      {
+        "line": 2,
+        "expected": "b'\\r\\n'",
+        "actual": "b'\\n'"
+      },
+      {
+        "line": 3,
+        "expected": "b'At line no: 1 type_specifier : INT \\r\\n'",
+        "actual": "b'At line no: 1 type_specifier : INT \\n'"
+      }
+    ]
+  }
+]
