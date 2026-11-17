@@ -21,8 +21,8 @@ version_2/
     ├── symbol_info.h     ← one symbol (variable / array / function) + `next` pointer
     ├── scope_table.h     ← ONE hash table: array of symbol_info* buckets, constructor scope_table(n)
     ├── symbol_table.h    ← stack of scope tables (enter/exit scope, insert, lookup, print)
-    ├── lex_analyzer.l    ← lexer   (replace with partner's Lab 1 .l, then edit – section 3)
-    ├── syntax_analyzer.y ← parser  (replace with partner's Lab 1 .y, then edit – section 4)
+    ├── 23101497_20201178.l ← lexer  (partner's Lab 1 .l, integrated – section 3)
+    ├── 23101497_20201178.y ← parser (partner's Lab 1 .y, integrated – section 4)
     ├── script.sh         ← build + run
     └── input.c           ← test input
 ```
@@ -40,19 +40,14 @@ Key facts about the symbol table:
 
 ---
 
-## 2. Before you start: back up
+## 2. Status: integration done
 
-```bash
-cd 23101497_20201178_Group26
-cp lex_analyzer.l    lex_analyzer.l.mine     # working version, use as a reference
-cp syntax_analyzer.y syntax_analyzer.y.mine
-```
-
-Then copy the partner's Lab 1 files in (rename them to `lex_analyzer.l` /
-`syntax_analyzer.y`, or update `script.sh` to their names).
-
-Whenever you are unsure, **compare with the `.mine` copies** – they already contain every
-change described below and produce the expected logs.
+Sections 3–4 are already applied to `23101497_20201178.l` / `23101497_20201178.y`
+(the old `lex_analyzer.l` / `syntax_analyzer.y` working copies, called `.mine` below,
+were folded in and deleted). The partner's names are kept: `outlog`, `line_num`,
+log file `23101497_20201178_log.txt`. Their `getnameofsymbol()` calls were renamed to
+`get_name()`, and the lexer no longer writes `Token <...> found` lines (the sample logs
+have none). `script.sh` builds these two files.
 
 ---
 
@@ -163,7 +158,7 @@ It fails on any shift/reduce or reduce/reduce conflict, so the grammar must be c
 Delete generated files before zipping:
 
 ```bash
-rm -f lex.yy.c y.tab.c y.tab.h y.output *.o parser *_log.txt my_log.txt
+rm -f lex.yy.c y.tab.c y.tab.h y.output *.o parser *_log.txt
 ```
 
 ---
@@ -174,13 +169,13 @@ Run from the `version_2` folder. It builds in a temporary folder (so the submiss
 folder stays clean), runs all three sample inputs and diffs each log:
 
 ```bash
-cd ~/Documents/CSE_310/offline_1/version_2
+cd offline_1/version_2               # from the root of the CSE_310 repo
 G=23101497_20201178_Group26
 IO="CSE420 Assignment 2 (All Nesse Files)/InputOutput-20261105T090938Z-1-001/InputOutput"
-LOG=my_log.txt                       # change to <student_id>_log.txt if renamed
+LOG=23101497_20201178_log.txt
 T=$(mktemp -d)
 cp $G/*.h $G/*.l $G/*.y "$T"/
-( cd "$T" && bison -d -o y.tab.c syntax_analyzer.y && flex lex_analyzer.l \
+( cd "$T" && bison -d -o y.tab.c 23101497_20201178.y && flex 23101497_20201178.l \
            && g++ -w y.tab.c lex.yy.c -o parser ) || echo "BUILD FAILED"
 for i in 1 2 3; do
   ( cd "$T" && ./parser "$OLDPWD/$IO/input$i.c" > /dev/null )
@@ -192,7 +187,7 @@ for i in 1 2 3; do
 done
 ```
 
-### Expected result (current `.mine` version)
+### Expected result (current version)
 
 ```text
 input1: DIFFERENT
