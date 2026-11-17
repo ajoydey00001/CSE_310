@@ -39,7 +39,10 @@ symbol_table::~symbol_table()
 void symbol_table::enter_scope()
 {
     current_scope_id++;
-    current_scope = new scope_table(bucket_count, current_scope_id, current_scope);
+    scope_table *new_scope = new scope_table(bucket_count);
+    new_scope->set_unique_id(current_scope_id);
+    new_scope->set_parent_scope(current_scope);
+    current_scope = new_scope;
 }
 
 void symbol_table::exit_scope()

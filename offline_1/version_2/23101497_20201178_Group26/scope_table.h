@@ -9,88 +9,114 @@ private:
     int bucket_count;
     int unique_id;
     scope_table *parent_scope = NULL;
-    vector<list<symbol_info *>> table;
+    symbol_info **table; // array of pointers: table[i] is the head of bucket i's chain
 
     int hash_function(string name)
     {
         int sum = 0;
         for (int i = 0; i < name.length(); i++)
             sum = sum + name[i];
-        int idx = sum % bucket_count;
+        int idx = sum % bucket_count; // keep the hash value in the range of the bucket size
         return idx;
     }
+
 public:
-    scope_table()
+    // allocates n buckets for the hash table
+    scope_table(int n)
     {
-        bucket_count =4;
-        unique_id =0;
+        bucket_count = n;
+        unique_id = 0;
         parent_scope = NULL;
-        table.resize(bucket_count);
-        return ;
+        table = new symbol_info *[bucket_count];
+        for (int i = 0; i < bucket_count; i++)
+            table[i] = NULL;
     }
-    scope_table(int bucket_count, int unique_id, scope_table *parent_scope)
-    {
-        this->bucket_count =bucket_count;
-        this->unique_id= unique_id;
-        this->parent_scope =parent_scope;
-        table.resize(bucket_count);
-        return;
-    }
+
     scope_table *get_parent_scope()
     {
-       return parent_scope;
+        return parent_scope;
+    }
+    void set_parent_scope(scope_table *parent)
+    {
+        parent_scope = parent;
     }
     int get_unique_id()
     {
-       return unique_id;
+        return unique_id;
+    }
+    void set_unique_id(int id)
+    {
+        unique_id = id;
     }
 
-    symbol_info *lookup_in_scope(symbol_info* symbol)
+    symbol_info *lookup_in_scope(symbol_info *symbol)
     {
-        int indx =hash_function(symbol->get_name());
-        for (symbol_info *s:table[indx])
-    {
-            if (s->get_name() ==symbol->get_name())
-                 return s;
-    }
+        int idx = hash_function(symbol->get_name());
+        symbol_info *cur = table[idx];
+        while (cur != NULL)
+        {
+            if (cur->get_name() == symbol->get_name())
+                return cur;
+            cur = cur->get_next();
+        }
         return NULL;
     }
 
-    bool insert_in_scope(symbol_info* symbol)
+    bool insert_in_scope(symbol_info *symbol)
     {
         if (lookup_in_scope(symbol) != NULL)
-            return false;   
-        int indx = hash_function(symbol->get_name());
-        table[indx].push_back(symbol);
+            return false;
+
+        int idx = hash_function(symbol->get_name());
+        symbol->set_next(NULL);
+
+        // append at the end of the chain so symbols print in insertion order
+        if (table[idx] == NULL)
+        {
+            table[idx] = symbol;
+        }
+        else
+        {
+            symbol_info *cur = table[idx];
+            while (cur->get_next() != NULL)
+                cur = cur->get_next();
+            cur->set_next(symbol);
+        }
         return true;
     }
 
-    bool delete_from_scope(symbol_info* symbol)
+    bool delete_from_scope(symbol_info *symbol)
     {
-       int idx = hash_function(symbol->get_name());
-       for (auto it = table[idx].begin(); it != table[idx].end(); ++it)
-       {
-            if ((*it)->get_name() == symbol->get_name())
+        int idx = hash_function(symbol->get_name());
+        symbol_info *cur = table[idx];
+        symbol_info *prev = NULL;
+        while (cur != NULL)
+        {
+            if (cur->get_name() == symbol->get_name())
             {
-                delete *it;
-                table[idx].erase(it);
+                if (prev == NULL)
+                    table[idx] = cur->get_next();
+                else
+                    prev->set_next(cur->get_next());
+                delete cur;
                 return true;
             }
+            prev = cur;
+            cur = cur->get_next();
         }
         return false;
     }
 
-
-    void print_scope_table(ofstream& outlog)
+    void print_scope_table(ofstream &outlog)
     {
-        outlog << "ScopeTable # "+ to_string(unique_id) << endl;
+        outlog << "ScopeTable # " + to_string(unique_id) << endl;
 
         for (int i = 0; i < bucket_count; i++)
         {
-            if (table[i].empty())
+            if (table[i] == NULL)
                 continue;
             outlog << i << " --> " << endl;
-            for (symbol_info *s :table[i])
+            for (symbol_info *s = table[i]; s != NULL; s = s->get_next())
             {
                 outlog << "< " << s->get_name() << " : " << s->get_type() << " >" << endl;
 
@@ -132,13 +158,18 @@ public:
 
     ~scope_table()
     {
-        for (auto &bucket : table)
+        for (int i = 0; i < bucket_count; i++)
         {
-            for (symbol_info *s : bucket)
-                delete s;
-            bucket.clear();
+            symbol_info *cur = table[i];
+            while (cur != NULL)
+            {
+                symbol_info *nxt = cur->get_next();
+                delete cur;
+                cur = nxt;
+            }
+            table[i] = NULL;
         }
-        table.clear();
+        delete[] table;
     }
 };
 

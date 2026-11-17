@@ -21,6 +21,8 @@ private:
     list<string> param_types; // parameter type
     int arr_size; // if array
 
+    symbol_info *next; // next symbol in the same hash bucket (chaining)
+
 public:
     symbol_info(string name, string type)
     {
@@ -29,6 +31,16 @@ public:
         this->symbol_type = "variable";
         this->data_type = "";
         this->arr_size = 0;
+        this->next = NULL;
+    }
+
+    symbol_info *get_next()
+    {
+        return next;
+    }
+    void set_next(symbol_info *next)
+    {
+        this->next = next;
     }
 
     string get_name() 
