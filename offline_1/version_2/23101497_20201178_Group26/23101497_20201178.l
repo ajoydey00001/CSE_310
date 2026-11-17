@@ -1,6 +1,7 @@
 %option noyywrap
 
 %{
+#include<bits/stdc++.h>
 
 #include"symbol_info.h"
 
